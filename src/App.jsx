@@ -1,10 +1,21 @@
+import { Navigate, Route, Routes } from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">
-        Author Dashboard 🚀
-      </h1>
-    </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+
+       {/* Protected routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<DashboardPage />} />
+      </Route>
+
+      {/* Catch all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
