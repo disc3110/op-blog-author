@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import NewPostPage from "./pages/NewPostPage.jsx";
+import EditPostPage from "./pages/EditPostPage.jsx";
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
        {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<DashboardPage />} />
+        <Route path="/posts/new" element={<NewPostPage />} />
+        <Route path="/posts/:id/edit" element={<EditPostPage />} />
       </Route>
 
       {/* Catch all */}
