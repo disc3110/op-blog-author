@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { fetchMyPosts, togglePublish } from "../services/postService";
 import StatusBadge from "../components/StatusBadge";
+import { Link } from "react-router-dom";
 
 function DashboardPage() {
   const { user, logout } = useAuth();
@@ -98,6 +99,13 @@ function DashboardPage() {
               Manage your drafts and published articles.
             </p>
           </div>
+
+          <Link
+            to="/posts/new"
+            className="ml-0 md:ml-2 inline-flex items-center justify-center rounded-md bg-blue-600 hover:bg-blue-500 px-3 py-1.5 text-xs font-medium text-white transition"
+          >
+            New Post
+          </Link>
 
           <div className="flex flex-col gap-2 md:flex-row md:items-center">
             <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
@@ -223,13 +231,12 @@ function DashboardPage() {
                             : "Publish"}
                         </button>
 
-                        {/* placeholder for Edit later */}
-                        <button
-                          type="button"
+                        <Link
+                          to={`/posts/${post.id}/edit`}
                           className="inline-flex items-center rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-100 hover:bg-slate-800"
                         >
                           Edit
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   ))

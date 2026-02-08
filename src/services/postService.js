@@ -19,3 +19,24 @@ export async function togglePublish(postId) {
     method: "PATCH",
   });
 }
+
+
+export async function createPost({ title, content, published = false }) {
+  return apiRequest("/posts", {
+    method: "POST",
+    body: JSON.stringify({ title, content, published }),
+  });
+}
+
+export async function updatePost(postId, { title, content, published }) {
+  return apiRequest(`/posts/${postId}`, {
+    method: "PUT",
+    body: JSON.stringify({ title, content, published }),
+  });
+}
+
+export async function fetchPostById(postId) {
+  return apiRequest(`/posts/${postId}`, {
+    method: "GET",
+  });
+}
