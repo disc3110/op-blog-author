@@ -4,11 +4,13 @@ import PostForm from "../components/PostForm";
 import { fetchPostById, updatePost } from "../services/postService";
 import { useAuth } from "../hooks/useAuth";
 import { fetchCommentsForPost, deleteComment } from "../services/commentService";
+import { useToast } from "../components/ToastProvider";
 
 function EditPostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const toast = useToast();
 
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -76,9 +78,11 @@ function EditPostPage() {
     setError("");
     try {
       await updatePost(Number(id), values);
+      toast.success("Post updated");
       navigate("/", { replace: true });
     } catch (err) {
       console.error(err);
+      toast.error(err.message || "Failed to update post");
       setError(err.message || "Failed to update post");
     } finally {
       setSubmitting(false);
@@ -91,6 +95,7 @@ function EditPostPage() {
     try {
       await deleteComment(commentId);
       await loadComments(); // reload same page
+      toast.success("Comment deleted");
     } catch (err) {
       console.error(err);
       setCommentsError(err.message || "Failed to delete comment");

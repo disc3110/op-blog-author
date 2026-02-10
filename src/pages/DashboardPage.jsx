@@ -3,9 +3,11 @@ import { useAuth } from "../hooks/useAuth";
 import { fetchMyPosts, togglePublish } from "../services/postService";
 import StatusBadge from "../components/StatusBadge";
 import { Link } from "react-router-dom";
+import { useToast } from "../components/ToastProvider"; 
 
 function DashboardPage() {
   const { user, logout } = useAuth();
+  const toast = useToast();
 
   const [posts, setPosts] = useState([]);
   const [meta, setMeta] = useState({
@@ -37,7 +39,9 @@ function DashboardPage() {
       setMeta(res.meta);
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to load posts");
+      const message = err.message || "Failed to load posts";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -51,12 +55,26 @@ function DashboardPage() {
   async function handleTogglePublish(postId) {
     setActionLoadingId(postId);
     setError("");
+
+    const target = posts.find((p) => p.id === postId);
+    const wasPublished = target?.published;
+
     try {
       await togglePublish(postId);
       await loadPosts();
+
+      if (wasPublished === true) {
+        toast.success("Post unpublished");
+      } else if (wasPublished === false) {
+        toast.success("Post published");
+      } else {
+        toast.success("Post status updated");
+      }
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to update publish status");
+      const message = err.message || "Failed to update publish status";
+      setError(message);
+      toast.error(message);
     } finally {
       setActionLoadingId(null);
     }

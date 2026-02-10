@@ -3,21 +3,25 @@ import { useNavigate } from "react-router-dom";
 import PostForm from "../components/PostForm";
 import { createPost } from "../services/postService";
 import { useAuth } from "../hooks/useAuth";
+import { useToast } from "../components/ToastProvider";
 
 function NewPostPage() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const toast = useToast();
 
   async function handleCreate(values) {
     setSubmitting(true);
     setError("");
     try {
       await createPost(values);
+      toast.success("Post created")
       navigate("/", { replace: true });
     } catch (err) {
       console.error(err);
+      toast.error(err.message || "Failed to create post");
       setError(err.message || "Failed to create post");
     } finally {
       setSubmitting(false);

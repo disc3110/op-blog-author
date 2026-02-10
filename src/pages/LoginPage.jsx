@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useToast } from "../components/ToastProvider";
 
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const toast = useToast();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -17,9 +18,11 @@ function LoginPage() {
     setSubmitting(true);
     try {
       await login(email, password);
+      toast.success("Logged in!");
       navigate("/", { replace: true });
     } catch (err) {
       console.error(err);
+      toast.error(err.message || "Login failed");
       setError(err.message || "Login failed");
     } finally {
       setSubmitting(false);
