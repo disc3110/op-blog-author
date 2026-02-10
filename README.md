@@ -1,16 +1,161 @@
-# React + Vite
+# ✍️ Blog Author Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is the **author/admin frontend** for a full-stack blog platform.
+It allows blog authors to **log in, manage posts, publish/unpublish content, and moderate comments**, all through a clean React dashboard.
 
-Currently, two official plugins are available:
+This repository is **one of three separate apps** that together form the full blog system:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Backend API** – Express, Prisma, PostgreSQL, JWT
+2. **Author Dashboard (this repo)** – React + Tailwind
+3. **Public Blog Frontend** – React (read, comment, like posts)
 
-## React Compiler
+Keeping them in separate repositories allows clean architectures and independent deployments.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌐 Live Demo
 
-## Expanding the ESLint configuration
+A live version of the Author Dashboard is available here:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+👉 https://op-blog-author-production.up.railway.app/
+
+You can log in using the following **mock author account**:
+
+```json
+{
+  "name": "Author User",
+  "email": "author@example.com",
+  "password": "author-password"
+}
+```
+
+This demo account has author permissions and can be used to explore all features of the dashboard.
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication
+- JWT-based login for authors
+- Protected routes
+- Token stored in `localStorage`
+- Logout support
+
+### 📝 Post Management
+- Paginated list of posts
+- Draft vs published status
+- Create new posts
+- Edit existing posts
+- Publish / unpublish posts
+- Comment & like counters per post
+
+### 💬 Comment Moderation
+- View comments per post
+- See author, date, and likes
+- Delete comments
+- Paginated comments list
+
+### 🔔 Global Notifications
+- Global success & error toast notifications
+- Used across all major actions
+- Non-blocking UI feedback
+
+### 🎨 UI / UX
+- Tailwind CSS
+- Responsive dashboard layout
+- Loading & empty states
+
+---
+
+## 🧱 Tech Stack
+
+- **Frontend:** React + Vite
+- **Styling:** Tailwind CSS
+- **Routing:** React Router
+- **State:** React Hooks
+- **API:** Fetch API
+- **Auth:** JWT
+- **Linting:** ESLint
+
+---
+
+## 🗂 Project Structure
+
+```
+src/
+├── components/
+│   ├── PostForm.jsx
+│   ├── ProtectedRoute.jsx
+│   ├── StatusBadge.jsx
+│   └── ToastProvider.jsx
+├── hooks/
+│   └── useAuth.js
+├── pages/
+│   ├── LoginPage.jsx
+│   ├── DashboardPage.jsx
+│   ├── NewPostPage.jsx
+│   └── EditPostPage.jsx
+├── services/
+│   ├── apiClient.js
+│   ├── authService.js
+│   ├── postService.js
+│   └── commentService.js
+├── App.jsx
+└── main.jsx
+```
+
+---
+
+## 🔧 Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000/api
+```
+
+---
+
+## ▶️ Running Locally
+
+```bash
+npm install
+npm run dev
+```
+
+App runs at:
+```
+http://localhost:5173
+```
+
+Make sure the backend API is running.
+
+---
+
+## 🔗 Related Repositories
+
+- **Backend API (Express + Prisma + PostgreSQL + JWT):**  
+  https://github.com/disc3110/op-blog-api
+
+- **Public Blog Frontend (React – read, comment, like posts):**  
+  https://github.com/disc3110/op-blog-public
+
+---
+
+## 📌 Future Improvements
+
+- Rich text editor (TinyMCE / TipTap)
+- Post preview mode
+- Comment editing
+- Role-based permissions
+- Image uploads
+
+---
+
+## 👤 Author
+
+Built by **Diego** as a full-stack portfolio project.
+
+---
+
+## 📄 License
+
+MIT
