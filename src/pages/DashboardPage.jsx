@@ -8,6 +8,8 @@ import { useToast } from "../components/ToastProvider";
 function DashboardPage() {
   const { user, logout } = useAuth();
   const toast = useToast();
+  const token = localStorage.getItem("authToken");
+  console.log(token)
 
   const [posts, setPosts] = useState([]);
   const [meta, setMeta] = useState({
@@ -99,6 +101,14 @@ function DashboardPage() {
           <span className="text-slate-300">
             {user?.name || user?.email}
           </span>
+          <a
+            href={`https://op-blog-public-production.up.railway.app?token=${token}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-blue-400 hover:text-blue-300"
+          >
+            Public Blog
+          </a>
           <button
             onClick={logout}
             className="rounded-md border border-slate-600 px-3 py-1 text-xs hover:bg-slate-800 transition"
