@@ -11,11 +11,14 @@ This repository is **one of three separate apps** that together form the full bl
 
 Keeping them in separate repositories allows clean architectures and independent deployments.
 
-## 🌐 Live Demo
+## 🚀 Live Demo
 
-A live version of the Author Dashboard is available here:
+Public App: 
+Author Dashboard: https://op-blog-author-production.up.railway.app
+Public Dashboard: https://op-blog-public-production.up.railway.app
 
-👉 https://op-blog-author-production.up.railway.app/
+Backend API: https://github.com/disc3110/op-blog-api
+
 
 You can log in using the following **mock author account**:
 
