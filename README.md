@@ -26,7 +26,7 @@ You can log in using the following **mock author account**:
 {
   "name": "Author User",
   "email": "author@example.com",
-  "password": "author-password"
+  "password": "password123"
 }
 ```
 
