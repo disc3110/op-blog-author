@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { fetchMyPosts, togglePublish } from "../services/postService";
+import { fetchMyPosts, fetchAllPosts, togglePublish } from "../services/postService";
 import StatusBadge from "../components/StatusBadge";
 import { Link } from "react-router-dom";
 import { useToast } from "../components/ToastProvider"; 
@@ -9,7 +9,7 @@ function DashboardPage() {
   const { user, logout } = useAuth();
   const toast = useToast();
   const token = localStorage.getItem("authToken");
-  console.log(token)
+  const isAdmin = user?.role === "ADMIN";
 
   const [posts, setPosts] = useState([]);
   const [meta, setMeta] = useState({
@@ -30,7 +30,7 @@ function DashboardPage() {
     try {
       const page = options.page ?? meta.page;
 
-      const res = await fetchMyPosts({
+      const res = await (isAdmin ? fetchAllPosts : fetchMyPosts)({
         page,
         pageSize: meta.pageSize,
         search,
@@ -96,7 +96,7 @@ function DashboardPage() {
     <div className="min-h-screen bg-slate-900 text-slate-50 flex flex-col">
       {/* Top bar */}
       <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/70 backdrop-blur">
-        <h1 className="text-xl font-semibold">Author Dashboard ✍️</h1>
+        <h1 className="text-xl font-semibold">{isAdmin ? "Admin Dashboard 🛠️" : "Author Dashboard ✍️"}</h1>
         <div className="flex items-center gap-3 text-sm">
           <span className="text-slate-300">
             {user?.name || user?.email}
@@ -122,9 +122,9 @@ function DashboardPage() {
         {/* Filters & actions */}
         <div className="flex flex-col gap-4 mb-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-lg font-semibold">My Posts</h2>
+            <h2 className="text-lg font-semibold">{isAdmin ? "All Posts" : "My Posts"}</h2>
             <p className="text-xs text-slate-400">
-              Manage your drafts and published articles.
+              {isAdmin ? "Review and manage every post in the system." : "Manage your drafts and published articles."}
             </p>
           </div>
 
@@ -232,6 +232,8 @@ function DashboardPage() {
                         <div className="text-xs text-slate-400 line-clamp-1">
                           {post.content}
                         </div>
+                        {isAdmin && (
+                          <div className="mt-1 text-xs text-slate-500">{post.author.name}</div>)}
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge published={post.published} />

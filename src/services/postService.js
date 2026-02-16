@@ -13,6 +13,18 @@ export async function fetchMyPosts({ page = 1, pageSize = 10, search = "", publi
   return apiRequest(`/posts/mine?${params.toString()}`);
 }
 
+export async function fetchAllPosts({ page = 1, pageSize = 10, search = "", published = "all" } = {}) {
+  const params = new URLSearchParams();
+
+  params.set("page", page);
+  params.set("pageSize", pageSize);
+
+  if (search) params.set("search", search);
+  if (published && published !== "all") params.set("published", published);
+
+  return apiRequest(`/posts/all?${params.toString()}`);
+}
+
 // Toggle publish/unpublish (PATCH /api/posts/:id/publish)
 export async function togglePublish(postId) {
   return apiRequest(`/posts/${postId}/publish`, {
@@ -38,5 +50,11 @@ export async function updatePost(postId, { title, content, published }) {
 export async function fetchPostById(postId) {
   return apiRequest(`/posts/${postId}`, {
     method: "GET",
+  });
+}
+
+export async function deletePost(postId) {
+  return apiRequest(`/posts/${postId}`, {
+    method: "DELETE",
   });
 }
