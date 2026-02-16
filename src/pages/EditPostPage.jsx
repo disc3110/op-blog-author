@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PostForm from "../components/PostForm";
-import { fetchPostById, updatePost } from "../services/postService";
+import { fetchPostById, updatePost, deletePost } from "../services/postService";
 import { useAuth } from "../hooks/useAuth";
 import { fetchCommentsForPost, deleteComment } from "../services/commentService";
 import { useToast } from "../components/ToastProvider";
@@ -26,6 +26,7 @@ function EditPostPage() {
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentActionId, setCommentActionId] = useState(null);
   const [commentsError, setCommentsError] = useState("");
+  const [deletingPost, setDeletingPost] = useState(false);
 
   useEffect(() => {
     async function loadPostAndComments() {
@@ -104,6 +105,33 @@ function EditPostPage() {
     }
   }
 
+  async function handleDeletePost() {
+    const hasComments = (commentsMeta?.totalItems ?? 0) > 0;
+    if (hasComments) {
+      toast.error("Posts with comments can’t be deleted");
+      return;
+    }
+
+    const ok = window.confirm(
+      "Delete this post? This can’t be undone."
+    );
+    if (!ok) return;
+
+    setDeletingPost(true);
+    setError("");
+    try {
+      await deletePost(Number(id));
+      toast.success("Post deleted");
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Failed to delete post");
+      setError(err.message || "Failed to delete post");
+    } finally {
+      setDeletingPost(false);
+    }
+  }
+
   function handleCommentsPageChange(nextPage) {
     if (
       nextPage < 1 ||
@@ -138,6 +166,37 @@ function EditPostPage() {
           <p className="text-slate-400 text-sm">Loading post…</p>
         ) : (
           <>
+            {/* Delete post (only allowed when there are no comments) */}
+            <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950/60 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-slate-100">Danger zone</p>
+                  {commentsMeta.totalItems > 0 ? (
+                    <p className="mt-1 text-xs text-slate-400">
+                      Posts with comments can’t be deleted.
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-xs text-slate-400">
+                      You can delete this post because it has no comments.
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleDeletePost}
+                  disabled={deletingPost || commentsMeta.totalItems > 0}
+                  className="inline-flex items-center justify-center rounded-md border border-red-500/60 px-3 py-2 text-xs font-semibold text-red-200 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {commentsMeta.totalItems > 0
+                    ? "Can’t delete (has comments)"
+                    : deletingPost
+                    ? "Deleting…"
+                    : "Delete post"}
+                </button>
+              </div>
+            </div>
+
             <PostForm
               initialValues={initialValues}
               onSubmit={handleUpdate}
